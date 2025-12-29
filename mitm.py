@@ -8,7 +8,7 @@ import hashlib
 LISTEN_PORT = 8888
 SERVER_PORT = 9999
 HOST = "127.0.0.1"
-
+#calcule de hash du message
 def compute_hash(msg):
     return hashlib.sha256(msg.encode()).hexdigest()[:16]
 
@@ -17,19 +17,19 @@ def start_mitm():
     s.bind((HOST, LISTEN_PORT))
     s.listen(5)
 
-    print("🕵️ MITM Proxy actif sur le port 8888")
+    print(" MITM Proxy actif sur le port 8888")
 
     while True:
         client, addr = s.accept()
         data = client.recv(4096).decode()
 
-        print("\n📥 Message intercepté :", data)
+        print("\n Message intercepté :", data)
 
         # Séparer message et hash
         if "|" in data:
             message, h = data.rsplit("|", 1)
 
-            # 👉 MODIFICATION MALVEILLANTE
+            #  MODIFICATION MALVEILLANTE
             modified_msg = message + " [MITM]"
             fake_hash = compute_hash(message)  # ancien hash → incohérent
 
